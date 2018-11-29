@@ -39,6 +39,7 @@
     #include "wx/osx/dcclient.h"
     #include "wx/osx/dcmemory.h"
     #include "wx/osx/private.h"
+    #include "wx/osx/core/cfdictionary.h"
 #else
     #include "CoreServices/CoreServices.h"
     #include "ApplicationServices/ApplicationServices.h"
@@ -1302,13 +1303,23 @@ bool wxMacCoreGraphicsPathData::Contains( wxDouble x, wxDouble y, wxPolygonFillM
 class WXDLLEXPORT wxMacCoreGraphicsContext : public wxGraphicsContext
 {
 public:
-    wxMacCoreGraphicsContext( wxGraphicsRenderer* renderer, CGContextRef cgcontext, wxDouble width = 0, wxDouble height = 0 );
+    wxMacCoreGraphicsContext( wxGraphicsRenderer* renderer,
+                              CGContextRef cgcontext,
+                              wxDouble width = 0,
+                              wxDouble height = 0,
+                              wxWindow* window = NULL );
 
     wxMacCoreGraphicsContext( wxGraphicsRenderer* renderer, wxWindow* window );
 
     wxMacCoreGraphicsContext( wxGraphicsRenderer* renderer);
 
     ~wxMacCoreGraphicsContext();
+
+    // Enable offset on non-high DPI displays, i.e. those with scale factor <= 1.
+    void SetEnableOffsetFromScaleFactor(double factor)
+    {
+        m_enableOffset = factor <= 1.0;
+    }
 
     void Init();
 
@@ -1508,7 +1519,12 @@ void wxMacCoreGraphicsContext::Init()
     m_interpolation = wxINTERPOLATION_DEFAULT;
 }
 
-wxMacCoreGraphicsContext::wxMacCoreGraphicsContext( wxGraphicsRenderer* renderer, CGContextRef cgcontext, wxDouble width, wxDouble height ) : wxGraphicsContext(renderer)
+wxMacCoreGraphicsContext::wxMacCoreGraphicsContext( wxGraphicsRenderer* renderer,
+                                                    CGContextRef cgcontext,
+                                                    wxDouble width,
+                                                    wxDouble height,
+                                                    wxWindow* window )
+    : wxGraphicsContext(renderer, window)
 {
     Init();
     SetNativeContext(cgcontext);
@@ -1517,11 +1533,13 @@ wxMacCoreGraphicsContext::wxMacCoreGraphicsContext( wxGraphicsRenderer* renderer
     m_initTransform = m_cgContext ? CGContextGetCTM(m_cgContext) : CGAffineTransformIdentity;
 }
 
-wxMacCoreGraphicsContext::wxMacCoreGraphicsContext( wxGraphicsRenderer* renderer, wxWindow* window ): wxGraphicsContext(renderer)
+wxMacCoreGraphicsContext::wxMacCoreGraphicsContext( wxGraphicsRenderer* renderer,
+                                                    wxWindow* window )
+    : wxGraphicsContext(renderer, window)
 {
     Init();
 
-    m_enableOffset = window->GetContentScaleFactor() <= 1;
+    SetEnableOffsetFromScaleFactor(window->GetContentScaleFactor());
     wxSize sz = window->GetSize();
     m_width = sz.x;
     m_height = sz.y;
@@ -2298,7 +2316,23 @@ void wxMacCoreGraphicsContext::DoDrawText( const wxString &str, wxDouble x, wxDo
     CGColorRef col = wxMacCreateCGColor( fref->GetColour() );
     CTFontRef font = fref->OSXGetCTFont();
 
-    wxCFRef<CFAttributedStringRef> attrtext( CFAttributedStringCreate(kCFAllocatorDefault, text, fref->OSXGetCTFontAttributes()) );
+    wxCFDictionaryRef fontattr(wxCFRetain(fref->OSXGetCTFontAttributes()));
+    wxCFMutableDictionaryRef inlinefontattr;
+    
+    bool setColorsInLine = false;
+    
+    // if we emulate boldness the stroke color is not taken from the current context
+    // therefore we have to set it explicitly
+    if ( fontattr.GetValue(kCTStrokeWidthAttributeName) != NULL)
+    {
+        setColorsInLine = true;
+        inlinefontattr = fontattr.CreateMutableCopy();
+        inlinefontattr.SetValue(kCTForegroundColorFromContextAttributeName, kCFBooleanFalse);
+        inlinefontattr.SetValue(kCTForegroundColorAttributeName,col);
+        inlinefontattr.SetValue(kCTStrokeColorAttributeName,col);
+    }
+        
+    wxCFRef<CFAttributedStringRef> attrtext( CFAttributedStringCreate(kCFAllocatorDefault, text, setColorsInLine ? inlinefontattr : fontattr ) );
     wxCFRef<CTLineRef> line( CTLineCreateWithAttributedString(attrtext) );
 
     y += CTFontGetAscent(font);
@@ -2677,26 +2711,18 @@ wxGraphicsRenderer* wxGraphicsRenderer::GetDefaultRenderer()
 
 wxGraphicsContext * wxMacCoreGraphicsRenderer::CreateContext( const wxWindowDC& dc )
 {
-    const wxDCImpl* impl = dc.GetImpl();
-    wxWindowDCImpl *win_impl = wxDynamicCast( impl, wxWindowDCImpl );
-    if (win_impl)
-    {
-        int w, h;
-        win_impl->GetSize( &w, &h );
-        CGContextRef cgctx = 0;
+    wxWindow* const win = dc.GetWindow();
+    wxCHECK_MSG( win, NULL, "Invalid wxWindowDC" );
 
-        wxASSERT_MSG(win_impl->GetWindow(), "Invalid wxWindow in wxMacCoreGraphicsRenderer::CreateContext");
-        if (win_impl->GetWindow())
-            cgctx =  (CGContextRef)(win_impl->GetWindow()->MacGetCGContextRef());
+    const wxSize sz = win->GetSize();
 
-        // having a cgctx being NULL is fine (will be created on demand)
-        // this is the case for all wxWindowDCs except wxPaintDC
-        wxMacCoreGraphicsContext *context = 
-            new wxMacCoreGraphicsContext( this, cgctx, (wxDouble) w, (wxDouble) h );
-        context->EnableOffset(dc.GetContentScaleFactor() < 2);
-        return context;
-    }
-    return NULL;
+    // having a cgctx being NULL is fine (will be created on demand)
+    // this is the case for all wxWindowDCs except wxPaintDC
+    CGContextRef cgctx = (CGContextRef)(win->MacGetCGContextRef());
+    wxMacCoreGraphicsContext *context =
+        new wxMacCoreGraphicsContext( this, cgctx, sz.x, sz.y, win );
+    context->SetEnableOffsetFromScaleFactor(dc.GetContentScaleFactor());
+    return context;
 }
 
 wxGraphicsContext * wxMacCoreGraphicsRenderer::CreateContext( const wxMemoryDC& dc )
@@ -2710,7 +2736,7 @@ wxGraphicsContext * wxMacCoreGraphicsRenderer::CreateContext( const wxMemoryDC& 
         mem_impl->GetSize( &w, &h );
         wxMacCoreGraphicsContext* context = new wxMacCoreGraphicsContext( this,
             (CGContextRef)(mem_impl->GetGraphicsContext()->GetNativeContext()), (wxDouble) w, (wxDouble) h );
-        context->EnableOffset(dc.GetContentScaleFactor() < 2);
+        context->SetEnableOffsetFromScaleFactor(dc.GetContentScaleFactor());
         return context;
     }
 #endif

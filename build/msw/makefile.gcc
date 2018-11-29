@@ -174,8 +174,10 @@ WXTIFF_OBJECTS =  \
 	$(OBJS)\wxtiff_tif_tile.o \
 	$(OBJS)\wxtiff_tif_version.o \
 	$(OBJS)\wxtiff_tif_warning.o \
+	$(OBJS)\wxtiff_tif_webp.o \
 	$(OBJS)\wxtiff_tif_write.o \
-	$(OBJS)\wxtiff_tif_zip.o
+	$(OBJS)\wxtiff_tif_zip.o \
+	$(OBJS)\wxtiff_tif_zstd.o
 WXEXPAT_CFLAGS = $(__DEBUGINFO) $(__OPTIMIZEFLAG) $(__THREADSFLAG) $(GCCFLAGS) \
 	-DHAVE_W32API_H -DNDEBUG -I$(LIBDIRNAME) $(CPPFLAGS) $(CFLAGS)
 WXEXPAT_OBJECTS =  \
@@ -1877,8 +1879,8 @@ ____CORE_SRC_FILENAMES_OBJECTS =  \
 	$(OBJS)\monodll_sound.o \
 	$(OBJS)\monodll_automtn.o \
 	$(OBJS)\monodll_notifmsgrt.o \
-	$(OBJS)\monodll_activityindicator.o \
 	$(OBJS)\monodll_uuid.o \
+	$(OBJS)\monodll_evtloop.o \
 	$(OBJS)\monodll_clrpickerg.o \
 	$(OBJS)\monodll_collpaneg.o \
 	$(OBJS)\monodll_filepickerg.o \
@@ -1900,7 +1902,6 @@ ____CORE_SRC_FILENAMES_OBJECTS =  \
 	$(OBJS)\monodll_msw_dialog.o \
 	$(OBJS)\monodll_dirdlg.o \
 	$(OBJS)\monodll_dragimag.o \
-	$(OBJS)\monodll_evtloop.o \
 	$(OBJS)\monodll_filedlg.o \
 	$(OBJS)\monodll_frame.o \
 	$(OBJS)\monodll_msw_gauge.o \
@@ -1948,6 +1949,7 @@ ____CORE_SRC_FILENAMES_OBJECTS =  \
 	$(OBJS)\monodll_datetimectrl.o \
 	$(OBJS)\monodll_timectrl.o \
 	$(OBJS)\monodll_datecontrols.o \
+	$(OBJS)\monodll_activityindicator.o \
 	$(OBJS)\monodll_msw_checklst.o \
 	$(OBJS)\monodll_msw_fdrepdlg.o \
 	$(OBJS)\monodll_fontdlg.o \
@@ -2220,9 +2222,9 @@ ____CORE_SRC_FILENAMES_OBJECTS =  \
 	$(OBJS)\monodll_sound.o \
 	$(OBJS)\monodll_automtn.o \
 	$(OBJS)\monodll_notifmsgrt.o \
-	$(OBJS)\monodll_activityindicator.o \
 	$(OBJS)\monodll_uuid.o \
 	$(OBJS)\monodll_evtloop.o \
+	$(OBJS)\monodll_animateg.o \
 	$(OBJS)\monodll_generic_accel.o \
 	$(OBJS)\monodll_clrpickerg.o \
 	$(OBJS)\monodll_collpaneg.o \
@@ -2712,8 +2714,8 @@ ____CORE_SRC_FILENAMES_1_OBJECTS =  \
 	$(OBJS)\monolib_sound.o \
 	$(OBJS)\monolib_automtn.o \
 	$(OBJS)\monolib_notifmsgrt.o \
-	$(OBJS)\monolib_activityindicator.o \
 	$(OBJS)\monolib_uuid.o \
+	$(OBJS)\monolib_evtloop.o \
 	$(OBJS)\monolib_clrpickerg.o \
 	$(OBJS)\monolib_collpaneg.o \
 	$(OBJS)\monolib_filepickerg.o \
@@ -2735,7 +2737,6 @@ ____CORE_SRC_FILENAMES_1_OBJECTS =  \
 	$(OBJS)\monolib_msw_dialog.o \
 	$(OBJS)\monolib_dirdlg.o \
 	$(OBJS)\monolib_dragimag.o \
-	$(OBJS)\monolib_evtloop.o \
 	$(OBJS)\monolib_filedlg.o \
 	$(OBJS)\monolib_frame.o \
 	$(OBJS)\monolib_msw_gauge.o \
@@ -2783,6 +2784,7 @@ ____CORE_SRC_FILENAMES_1_OBJECTS =  \
 	$(OBJS)\monolib_datetimectrl.o \
 	$(OBJS)\monolib_timectrl.o \
 	$(OBJS)\monolib_datecontrols.o \
+	$(OBJS)\monolib_activityindicator.o \
 	$(OBJS)\monolib_msw_checklst.o \
 	$(OBJS)\monolib_msw_fdrepdlg.o \
 	$(OBJS)\monolib_fontdlg.o \
@@ -3055,9 +3057,9 @@ ____CORE_SRC_FILENAMES_1_OBJECTS =  \
 	$(OBJS)\monolib_sound.o \
 	$(OBJS)\monolib_automtn.o \
 	$(OBJS)\monolib_notifmsgrt.o \
-	$(OBJS)\monolib_activityindicator.o \
 	$(OBJS)\monolib_uuid.o \
 	$(OBJS)\monolib_evtloop.o \
+	$(OBJS)\monolib_animateg.o \
 	$(OBJS)\monolib_generic_accel.o \
 	$(OBJS)\monolib_clrpickerg.o \
 	$(OBJS)\monolib_collpaneg.o \
@@ -3432,8 +3434,8 @@ ____CORE_SRC_FILENAMES_2_OBJECTS =  \
 	$(OBJS)\coredll_sound.o \
 	$(OBJS)\coredll_automtn.o \
 	$(OBJS)\coredll_notifmsgrt.o \
-	$(OBJS)\coredll_activityindicator.o \
 	$(OBJS)\coredll_uuid.o \
+	$(OBJS)\coredll_evtloop.o \
 	$(OBJS)\coredll_clrpickerg.o \
 	$(OBJS)\coredll_collpaneg.o \
 	$(OBJS)\coredll_filepickerg.o \
@@ -3455,7 +3457,6 @@ ____CORE_SRC_FILENAMES_2_OBJECTS =  \
 	$(OBJS)\coredll_msw_dialog.o \
 	$(OBJS)\coredll_dirdlg.o \
 	$(OBJS)\coredll_dragimag.o \
-	$(OBJS)\coredll_evtloop.o \
 	$(OBJS)\coredll_filedlg.o \
 	$(OBJS)\coredll_frame.o \
 	$(OBJS)\coredll_msw_gauge.o \
@@ -3503,6 +3504,7 @@ ____CORE_SRC_FILENAMES_2_OBJECTS =  \
 	$(OBJS)\coredll_datetimectrl.o \
 	$(OBJS)\coredll_timectrl.o \
 	$(OBJS)\coredll_datecontrols.o \
+	$(OBJS)\coredll_activityindicator.o \
 	$(OBJS)\coredll_msw_checklst.o \
 	$(OBJS)\coredll_msw_fdrepdlg.o \
 	$(OBJS)\coredll_fontdlg.o \
@@ -3775,9 +3777,9 @@ ____CORE_SRC_FILENAMES_2_OBJECTS =  \
 	$(OBJS)\coredll_sound.o \
 	$(OBJS)\coredll_automtn.o \
 	$(OBJS)\coredll_notifmsgrt.o \
-	$(OBJS)\coredll_activityindicator.o \
 	$(OBJS)\coredll_uuid.o \
 	$(OBJS)\coredll_evtloop.o \
+	$(OBJS)\coredll_animateg.o \
 	$(OBJS)\coredll_generic_accel.o \
 	$(OBJS)\coredll_clrpickerg.o \
 	$(OBJS)\coredll_collpaneg.o \
@@ -4110,8 +4112,8 @@ ____CORE_SRC_FILENAMES_3_OBJECTS =  \
 	$(OBJS)\corelib_sound.o \
 	$(OBJS)\corelib_automtn.o \
 	$(OBJS)\corelib_notifmsgrt.o \
-	$(OBJS)\corelib_activityindicator.o \
 	$(OBJS)\corelib_uuid.o \
+	$(OBJS)\corelib_evtloop.o \
 	$(OBJS)\corelib_clrpickerg.o \
 	$(OBJS)\corelib_collpaneg.o \
 	$(OBJS)\corelib_filepickerg.o \
@@ -4133,7 +4135,6 @@ ____CORE_SRC_FILENAMES_3_OBJECTS =  \
 	$(OBJS)\corelib_msw_dialog.o \
 	$(OBJS)\corelib_dirdlg.o \
 	$(OBJS)\corelib_dragimag.o \
-	$(OBJS)\corelib_evtloop.o \
 	$(OBJS)\corelib_filedlg.o \
 	$(OBJS)\corelib_frame.o \
 	$(OBJS)\corelib_msw_gauge.o \
@@ -4181,6 +4182,7 @@ ____CORE_SRC_FILENAMES_3_OBJECTS =  \
 	$(OBJS)\corelib_datetimectrl.o \
 	$(OBJS)\corelib_timectrl.o \
 	$(OBJS)\corelib_datecontrols.o \
+	$(OBJS)\corelib_activityindicator.o \
 	$(OBJS)\corelib_msw_checklst.o \
 	$(OBJS)\corelib_msw_fdrepdlg.o \
 	$(OBJS)\corelib_fontdlg.o \
@@ -4453,9 +4455,9 @@ ____CORE_SRC_FILENAMES_3_OBJECTS =  \
 	$(OBJS)\corelib_sound.o \
 	$(OBJS)\corelib_automtn.o \
 	$(OBJS)\corelib_notifmsgrt.o \
-	$(OBJS)\corelib_activityindicator.o \
 	$(OBJS)\corelib_uuid.o \
 	$(OBJS)\corelib_evtloop.o \
+	$(OBJS)\corelib_animateg.o \
 	$(OBJS)\corelib_generic_accel.o \
 	$(OBJS)\corelib_clrpickerg.o \
 	$(OBJS)\corelib_collpaneg.o \
@@ -6132,10 +6134,16 @@ $(OBJS)\wxtiff_tif_version.o: ../../src/tiff/libtiff/tif_version.c
 $(OBJS)\wxtiff_tif_warning.o: ../../src/tiff/libtiff/tif_warning.c
 	$(CC) -c -o $@ $(WXTIFF_CFLAGS) $(CPPDEPS) $<
 
+$(OBJS)\wxtiff_tif_webp.o: ../../src/tiff/libtiff/tif_webp.c
+	$(CC) -c -o $@ $(WXTIFF_CFLAGS) $(CPPDEPS) $<
+
 $(OBJS)\wxtiff_tif_write.o: ../../src/tiff/libtiff/tif_write.c
 	$(CC) -c -o $@ $(WXTIFF_CFLAGS) $(CPPDEPS) $<
 
 $(OBJS)\wxtiff_tif_zip.o: ../../src/tiff/libtiff/tif_zip.c
+	$(CC) -c -o $@ $(WXTIFF_CFLAGS) $(CPPDEPS) $<
+
+$(OBJS)\wxtiff_tif_zstd.o: ../../src/tiff/libtiff/tif_zstd.c
 	$(CC) -c -o $@ $(WXTIFF_CFLAGS) $(CPPDEPS) $<
 
 $(OBJS)\wxexpat_xmlparse.o: ../../src/expat/expat/lib/xmlparse.c
@@ -7116,9 +7124,6 @@ $(OBJS)\monodll_systhemectrl.o: ../../src/msw/systhemectrl.cpp
 $(OBJS)\monodll_customdraw.o: ../../src/msw/customdraw.cpp
 	$(CXX) -c -o $@ $(MONODLL_CXXFLAGS) $(CPPDEPS) $<
 
-$(OBJS)\monodll_animateg.o: ../../src/generic/animateg.cpp
-	$(CXX) -c -o $@ $(MONODLL_CXXFLAGS) $(CPPDEPS) $<
-
 $(OBJS)\monodll_commandlinkbutton.o: ../../src/msw/commandlinkbutton.cpp
 	$(CXX) -c -o $@ $(MONODLL_CXXFLAGS) $(CPPDEPS) $<
 
@@ -8070,19 +8075,12 @@ $(OBJS)\monodll_notifmsgrt.o: ../../src/msw/rt/notifmsgrt.cpp
 endif
 
 ifeq ($(USE_GUI),1)
-$(OBJS)\monodll_activityindicator.o: ../../src/generic/activityindicator.cpp
-	$(CXX) -c -o $@ $(MONODLL_CXXFLAGS) $(CPPDEPS) $<
-endif
-
-ifeq ($(USE_GUI),1)
-ifeq ($(WXUNIV),1)
-$(OBJS)\monodll_activityindicator.o: ../../src/generic/activityindicator.cpp
-	$(CXX) -c -o $@ $(MONODLL_CXXFLAGS) $(CPPDEPS) $<
-endif
-endif
-
-ifeq ($(USE_GUI),1)
 $(OBJS)\monodll_uuid.o: ../../src/msw/ole/uuid.cpp
+	$(CXX) -c -o $@ $(MONODLL_CXXFLAGS) $(CPPDEPS) $<
+endif
+
+ifeq ($(USE_GUI),1)
+$(OBJS)\monodll_evtloop.o: ../../src/msw/evtloop.cpp
 	$(CXX) -c -o $@ $(MONODLL_CXXFLAGS) $(CPPDEPS) $<
 endif
 
@@ -8112,7 +8110,12 @@ $(OBJS)\monodll_prntdlgg.o: ../../src/generic/prntdlgg.cpp
 endif
 
 ifeq ($(USE_GUI),1)
-$(OBJS)\monodll_evtloop.o: ../../src/msw/evtloop.cpp
+$(OBJS)\monodll_animateg.o: ../../src/generic/animateg.cpp
+	$(CXX) -c -o $@ $(MONODLL_CXXFLAGS) $(CPPDEPS) $<
+endif
+
+ifeq ($(USE_GUI),1)
+$(OBJS)\monodll_activityindicator.o: ../../src/generic/activityindicator.cpp
 	$(CXX) -c -o $@ $(MONODLL_CXXFLAGS) $(CPPDEPS) $<
 endif
 
@@ -9662,9 +9665,6 @@ $(OBJS)\monolib_systhemectrl.o: ../../src/msw/systhemectrl.cpp
 $(OBJS)\monolib_customdraw.o: ../../src/msw/customdraw.cpp
 	$(CXX) -c -o $@ $(MONOLIB_CXXFLAGS) $(CPPDEPS) $<
 
-$(OBJS)\monolib_animateg.o: ../../src/generic/animateg.cpp
-	$(CXX) -c -o $@ $(MONOLIB_CXXFLAGS) $(CPPDEPS) $<
-
 $(OBJS)\monolib_commandlinkbutton.o: ../../src/msw/commandlinkbutton.cpp
 	$(CXX) -c -o $@ $(MONOLIB_CXXFLAGS) $(CPPDEPS) $<
 
@@ -10616,19 +10616,12 @@ $(OBJS)\monolib_notifmsgrt.o: ../../src/msw/rt/notifmsgrt.cpp
 endif
 
 ifeq ($(USE_GUI),1)
-$(OBJS)\monolib_activityindicator.o: ../../src/generic/activityindicator.cpp
-	$(CXX) -c -o $@ $(MONOLIB_CXXFLAGS) $(CPPDEPS) $<
-endif
-
-ifeq ($(USE_GUI),1)
-ifeq ($(WXUNIV),1)
-$(OBJS)\monolib_activityindicator.o: ../../src/generic/activityindicator.cpp
-	$(CXX) -c -o $@ $(MONOLIB_CXXFLAGS) $(CPPDEPS) $<
-endif
-endif
-
-ifeq ($(USE_GUI),1)
 $(OBJS)\monolib_uuid.o: ../../src/msw/ole/uuid.cpp
+	$(CXX) -c -o $@ $(MONOLIB_CXXFLAGS) $(CPPDEPS) $<
+endif
+
+ifeq ($(USE_GUI),1)
+$(OBJS)\monolib_evtloop.o: ../../src/msw/evtloop.cpp
 	$(CXX) -c -o $@ $(MONOLIB_CXXFLAGS) $(CPPDEPS) $<
 endif
 
@@ -10658,7 +10651,12 @@ $(OBJS)\monolib_prntdlgg.o: ../../src/generic/prntdlgg.cpp
 endif
 
 ifeq ($(USE_GUI),1)
-$(OBJS)\monolib_evtloop.o: ../../src/msw/evtloop.cpp
+$(OBJS)\monolib_animateg.o: ../../src/generic/animateg.cpp
+	$(CXX) -c -o $@ $(MONOLIB_CXXFLAGS) $(CPPDEPS) $<
+endif
+
+ifeq ($(USE_GUI),1)
+$(OBJS)\monolib_activityindicator.o: ../../src/generic/activityindicator.cpp
 	$(CXX) -c -o $@ $(MONOLIB_CXXFLAGS) $(CPPDEPS) $<
 endif
 
@@ -12622,9 +12620,6 @@ $(OBJS)\coredll_systhemectrl.o: ../../src/msw/systhemectrl.cpp
 $(OBJS)\coredll_customdraw.o: ../../src/msw/customdraw.cpp
 	$(CXX) -c -o $@ $(COREDLL_CXXFLAGS) $(CPPDEPS) $<
 
-$(OBJS)\coredll_animateg.o: ../../src/generic/animateg.cpp
-	$(CXX) -c -o $@ $(COREDLL_CXXFLAGS) $(CPPDEPS) $<
-
 $(OBJS)\coredll_commandlinkbutton.o: ../../src/msw/commandlinkbutton.cpp
 	$(CXX) -c -o $@ $(COREDLL_CXXFLAGS) $(CPPDEPS) $<
 
@@ -13126,19 +13121,12 @@ $(OBJS)\coredll_notifmsgrt.o: ../../src/msw/rt/notifmsgrt.cpp
 endif
 
 ifeq ($(USE_GUI),1)
-$(OBJS)\coredll_activityindicator.o: ../../src/generic/activityindicator.cpp
-	$(CXX) -c -o $@ $(COREDLL_CXXFLAGS) $(CPPDEPS) $<
-endif
-
-ifeq ($(USE_GUI),1)
-ifeq ($(WXUNIV),1)
-$(OBJS)\coredll_activityindicator.o: ../../src/generic/activityindicator.cpp
-	$(CXX) -c -o $@ $(COREDLL_CXXFLAGS) $(CPPDEPS) $<
-endif
-endif
-
-ifeq ($(USE_GUI),1)
 $(OBJS)\coredll_uuid.o: ../../src/msw/ole/uuid.cpp
+	$(CXX) -c -o $@ $(COREDLL_CXXFLAGS) $(CPPDEPS) $<
+endif
+
+ifeq ($(USE_GUI),1)
+$(OBJS)\coredll_evtloop.o: ../../src/msw/evtloop.cpp
 	$(CXX) -c -o $@ $(COREDLL_CXXFLAGS) $(CPPDEPS) $<
 endif
 
@@ -13168,7 +13156,12 @@ $(OBJS)\coredll_prntdlgg.o: ../../src/generic/prntdlgg.cpp
 endif
 
 ifeq ($(USE_GUI),1)
-$(OBJS)\coredll_evtloop.o: ../../src/msw/evtloop.cpp
+$(OBJS)\coredll_animateg.o: ../../src/generic/animateg.cpp
+	$(CXX) -c -o $@ $(COREDLL_CXXFLAGS) $(CPPDEPS) $<
+endif
+
+ifeq ($(USE_GUI),1)
+$(OBJS)\coredll_activityindicator.o: ../../src/generic/activityindicator.cpp
 	$(CXX) -c -o $@ $(COREDLL_CXXFLAGS) $(CPPDEPS) $<
 endif
 
@@ -14355,9 +14348,6 @@ $(OBJS)\corelib_systhemectrl.o: ../../src/msw/systhemectrl.cpp
 $(OBJS)\corelib_customdraw.o: ../../src/msw/customdraw.cpp
 	$(CXX) -c -o $@ $(CORELIB_CXXFLAGS) $(CPPDEPS) $<
 
-$(OBJS)\corelib_animateg.o: ../../src/generic/animateg.cpp
-	$(CXX) -c -o $@ $(CORELIB_CXXFLAGS) $(CPPDEPS) $<
-
 $(OBJS)\corelib_commandlinkbutton.o: ../../src/msw/commandlinkbutton.cpp
 	$(CXX) -c -o $@ $(CORELIB_CXXFLAGS) $(CPPDEPS) $<
 
@@ -14859,19 +14849,12 @@ $(OBJS)\corelib_notifmsgrt.o: ../../src/msw/rt/notifmsgrt.cpp
 endif
 
 ifeq ($(USE_GUI),1)
-$(OBJS)\corelib_activityindicator.o: ../../src/generic/activityindicator.cpp
-	$(CXX) -c -o $@ $(CORELIB_CXXFLAGS) $(CPPDEPS) $<
-endif
-
-ifeq ($(USE_GUI),1)
-ifeq ($(WXUNIV),1)
-$(OBJS)\corelib_activityindicator.o: ../../src/generic/activityindicator.cpp
-	$(CXX) -c -o $@ $(CORELIB_CXXFLAGS) $(CPPDEPS) $<
-endif
-endif
-
-ifeq ($(USE_GUI),1)
 $(OBJS)\corelib_uuid.o: ../../src/msw/ole/uuid.cpp
+	$(CXX) -c -o $@ $(CORELIB_CXXFLAGS) $(CPPDEPS) $<
+endif
+
+ifeq ($(USE_GUI),1)
+$(OBJS)\corelib_evtloop.o: ../../src/msw/evtloop.cpp
 	$(CXX) -c -o $@ $(CORELIB_CXXFLAGS) $(CPPDEPS) $<
 endif
 
@@ -14901,7 +14884,12 @@ $(OBJS)\corelib_prntdlgg.o: ../../src/generic/prntdlgg.cpp
 endif
 
 ifeq ($(USE_GUI),1)
-$(OBJS)\corelib_evtloop.o: ../../src/msw/evtloop.cpp
+$(OBJS)\corelib_animateg.o: ../../src/generic/animateg.cpp
+	$(CXX) -c -o $@ $(CORELIB_CXXFLAGS) $(CPPDEPS) $<
+endif
+
+ifeq ($(USE_GUI),1)
+$(OBJS)\corelib_activityindicator.o: ../../src/generic/activityindicator.cpp
 	$(CXX) -c -o $@ $(CORELIB_CXXFLAGS) $(CPPDEPS) $<
 endif
 
